@@ -189,3 +189,67 @@ iframe {
   height: 315px;
 }
 
+
+// Dataset tables
+
+.dataset-preview,
+.dataset-full {
+  overflow-x: auto;        // let wide tables scroll on narrow screens
+  margin: 0 auto;
+}
+
+.dataset-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: "Gentium Book Plus", serif;
+  font-size: 16px;
+  margin: 0 auto;
+}
+
+.dataset-table caption {
+  font-size: 18px;
+  font-weight: 700;
+  color: #476345;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.dataset-table th,
+.dataset-table td {
+  border: 1px solid #cbd5c9;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.dataset-table thead th {
+  background: #476345;
+  color: #fff;
+  font-weight: 700;
+}
+
+.dataset-table th.num,
+.dataset-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.dataset-table tbody tr:nth-child(even) {
+  background: #f3f6f2;
+}
+
+.dataset-note {
+  font-size: 14px;
+  font-style: italic;
+  color: #666;
+  text-align: center;
+  margin-top: 12px;
+}
+
+// On the detail page a dataset needs full width, not the 2-column image grid.
+.img_description.is-dataset {
+  display: block;
+}
+
+.img_description.is-dataset .text {
+  margin-top: 30px;
+}

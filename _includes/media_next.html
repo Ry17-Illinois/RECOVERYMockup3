@@ -35,6 +35,53 @@ Usage example in a page:
               <a class="description_btn" href="{{ base_path }}{{ element.url }}">Detailed description</a>
             </div>
           </div>
+        {%- elsif element.media_type == 'dataset' -%}
+          {%- comment -%}
+          Render a preview of a tabular dataset stored in _data/.
+          `preview_columns` chooses which term columns to show; `preview_rows`
+          caps the number of rows. The full table lives on the detail page.
+          {%- endcomment -%}
+          {%- assign rows = site.data[element._data] -%}
+          {%- assign preview_cols = element.preview_columns | split: ',' -%}
+          {%- assign row_cap = element.preview_rows | default: 5 | plus: 0 -%}
+          <div class="container">
+            <div class="dataset-preview">
+              <table class="dataset-table">
+                <caption>{{ element._title }}</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Text</th>
+                    {%- for col in preview_cols -%}
+                      <th scope="col" class="num">{{ col | strip }}</th>
+                    {%- endfor -%}
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for row in rows limit: row_cap -%}
+                    <tr>
+                      <td>{{ row.Date }}</td>
+                      <td>{{ row.Text }}</td>
+                      {%- for col in preview_cols -%}
+                        {%- assign key = col | strip -%}
+                        <td class="num">{{ row[key] }}</td>
+                      {%- endfor -%}
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+              <p class="dataset-note">Preview: {{ row_cap }} of {{ rows.size }} texts. See the full table for all terms.</p>
+            </div>
+            <div class="description-wrapper">
+              <p class="media-caption">Title: {{ element._title }}<br>
+              Creator: {{ element.creator }}<br>
+              Date: {{ element._date }}</p>
+              <a class="description_btn" href="{{ base_path }}{{ element.url }}">View full table</a>
+              {%- if element.download_path -%}
+                <a class="description_btn" href="{{ base_path }}{{ element.download_path }}" download>Download .csv</a>
+              {%- endif -%}
+            </div>
+          </div>
         {%- else -%}
           <div class="container">
             <iframe

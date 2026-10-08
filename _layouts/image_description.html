@@ -3,10 +3,45 @@ layout: default
 ---
   {%- assign base_path = site.baseurl | default: site.github.baseurl -%}
   <body>
-    <div class="img_description">
+    <div class="img_description {% if page.media_type == 'dataset' %}is-dataset{% endif %}">
       <div class="image">
         {% if page.media_type == 'image' %}
         <img src="{% if page._path contains 'assets' %} {{ base_path }}{{ page._path }} {% else %} {{ page._path }} {% endif %}">
+        {% elsif page.media_type == 'dataset' %}
+        {%- assign rows = site.data[page._data] -%}
+        {%- comment -%} Derive column headers from the first row's keys, skipping Date/Text. {%- endcomment -%}
+        <div class="dataset-full">
+          <table class="dataset-table">
+            <caption>{{ page._title }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Text</th>
+                {%- for pair in rows[0] -%}
+                  {%- unless pair[0] == 'Date' or pair[0] == 'Text' -%}
+                    <th scope="col" class="num">{{ pair[0] }}</th>
+                  {%- endunless -%}
+                {%- endfor -%}
+              </tr>
+            </thead>
+            <tbody>
+              {%- for row in rows -%}
+                <tr>
+                  <td>{{ row.Date }}</td>
+                  <td>{{ row.Text }}</td>
+                  {%- for pair in row -%}
+                    {%- unless pair[0] == 'Date' or pair[0] == 'Text' -%}
+                      <td class="num">{{ pair[1] }}</td>
+                    {%- endunless -%}
+                  {%- endfor -%}
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          {%- if page.download_path -%}
+          <p><a class="description_btn" href="{{ base_path }}{{ page.download_path }}" download>Download .csv</a></p>
+          {%- endif -%}
+        </div>
         {% else %}
         <iframe
         src="{% if page._path contains 'assets' %} {{ base_path }}{{ page._path }} {% else %} {{ page._path }} {% endif %}" class="page_image"></iframe>
