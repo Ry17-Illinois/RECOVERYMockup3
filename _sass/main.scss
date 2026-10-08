@@ -275,6 +275,12 @@ iframe {
   min-width: 120px;
 }
 
+// The merged happiness column has a long header; give it a little more width.
+.dataset-table--compact th:nth-child(3),
+.dataset-table--compact td:nth-child(3) {
+  width: 58px;
+}
+
 // On the detail page a dataset needs full width, not the 2-column image grid.
 .img_description.is-dataset {
   display: block;
