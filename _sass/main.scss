@@ -245,6 +245,36 @@ iframe {
   margin-top: 12px;
 }
 
+// Compact variant: fit many term columns in the narrow reading column.
+.dataset-table--compact {
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.dataset-table--compact th,
+.dataset-table--compact td {
+  padding: 4px 5px;
+}
+
+// Term (numeric) columns are narrow; the Text column takes the slack and wraps.
+.dataset-table--compact th.num,
+.dataset-table--compact td.num {
+  width: 42px;
+}
+
+.dataset-table--compact thead th.num {
+  // Keep long headers (e.g. "Happiest", "Pleasure") from forcing the table wide.
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.dataset-table--compact td:nth-child(2),
+.dataset-table--compact th:nth-child(2) {
+  // Text column: allow it to wrap rather than stretch the table.
+  white-space: normal;
+  min-width: 120px;
+}
+
 // On the detail page a dataset needs full width, not the 2-column image grid.
 .img_description.is-dataset {
   display: block;

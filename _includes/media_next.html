@@ -38,39 +38,50 @@ Usage example in a page:
         {%- elsif element.media_type == 'dataset' -%}
           {%- comment -%}
           Render a preview of a tabular dataset stored in _data/.
-          `preview_columns` chooses which term columns to show; `preview_rows`
-          caps the number of rows. The full table lives on the detail page.
+          `preview_texts` is a comma-separated list of Text values to feature;
+          the preview shows those rows with ALL term columns. The full table
+          (every row) lives on the detail page. Column order and headers are
+          derived from the data, skipping the Date/Text identifier columns.
           {%- endcomment -%}
           {%- assign rows = site.data[element._data] -%}
-          {%- assign preview_cols = element.preview_columns | split: ',' -%}
-          {%- assign row_cap = element.preview_rows | default: 5 | plus: 0 -%}
+          {%- assign preview_names = element.preview_texts | split: ',' -%}
           <div class="container">
             <div class="dataset-preview">
-              <table class="dataset-table">
+              <table class="dataset-table dataset-table--compact">
                 <caption>{{ element._title }}</caption>
                 <thead>
                   <tr>
                     <th scope="col">Date</th>
                     <th scope="col">Text</th>
-                    {%- for col in preview_cols -%}
-                      <th scope="col" class="num">{{ col | strip }}</th>
+                    {%- for pair in rows[0] -%}
+                      {%- unless pair[0] == 'Date' or pair[0] == 'Text' -%}
+                        <th scope="col" class="num">{{ pair[0] }}</th>
+                      {%- endunless -%}
                     {%- endfor -%}
                   </tr>
                 </thead>
                 <tbody>
-                  {%- for row in rows limit: row_cap -%}
-                    <tr>
-                      <td>{{ row.Date }}</td>
-                      <td>{{ row.Text }}</td>
-                      {%- for col in preview_cols -%}
-                        {%- assign key = col | strip -%}
-                        <td class="num">{{ row[key] }}</td>
-                      {%- endfor -%}
-                    </tr>
+                  {%- for row in rows -%}
+                    {%- assign show = false -%}
+                    {%- for name in preview_names -%}
+                      {%- assign trimmed = name | strip -%}
+                      {%- if row.Text == trimmed -%}{%- assign show = true -%}{%- endif -%}
+                    {%- endfor -%}
+                    {%- if show -%}
+                      <tr>
+                        <td>{{ row.Date }}</td>
+                        <td>{{ row.Text }}</td>
+                        {%- for pair in row -%}
+                          {%- unless pair[0] == 'Date' or pair[0] == 'Text' -%}
+                            <td class="num">{{ pair[1] }}</td>
+                          {%- endunless -%}
+                        {%- endfor -%}
+                      </tr>
+                    {%- endif -%}
                   {%- endfor -%}
                 </tbody>
               </table>
-              <p class="dataset-note">Preview: {{ row_cap }} of {{ rows.size }} texts. See the full table for all terms.</p>
+              <p class="dataset-note">Preview: {{ preview_names.size }} of {{ rows.size }} texts, all terms. See the full table for every text.</p>
             </div>
             <div class="description-wrapper">
               <p class="media-caption">Title: {{ element._title }}<br>

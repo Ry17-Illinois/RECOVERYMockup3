@@ -18,11 +18,11 @@ date_created_(IPTC): 2023
 
 # Dataset-specific fields:
 # _data points to the file in _data/ (without extension) that holds the table.
-# preview_columns lists the term columns to show in the on-page preview.
-# preview_rows caps how many rows the on-page preview shows.
+# preview_texts lists the exact Text values to feature in the on-page preview.
+#   The preview shows these rows with ALL term columns; the full table on the
+#   detail page shows every row.
 _data: james_happiness
-preview_columns: Happy, Joy, Pleasure, Pain
-preview_rows: 5
+preview_texts: Principles of Psychology Vol. I, Principles of Psychology Vol. II, Varieties
 download_path: /assets/data/james_happiness.csv
 
 order: '01'
